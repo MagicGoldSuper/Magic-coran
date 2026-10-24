@@ -3,6 +3,9 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+concurrency:
+  group: build
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,7 +29,13 @@ jobs:
           cp AndroidManifest.xml app/src/main/
           cp *.java app/src/main/java/com/magic/iptv/
           cp strings.xml app/src/main/res/values/
-          cp ic_launcher.xml banner.xml app/src/main/res/drawable/
+          mkdir -p app/src/main/res/mipmap-xxxhdpi
+          mkdir -p app/src/main/res/mipmap-anydpi-v26
+          cp banner.png app/src/main/res/drawable/banner.png
+          cp ic_launcher_bg.xml app/src/main/res/drawable/ic_launcher_bg.xml
+          cp ic_launcher_fg.png app/src/main/res/drawable/ic_launcher_fg.png
+          cp ic_launcher.png app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          cp ic_launcher_adaptive.xml app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
           cp index.html app/src/main/assets/
       - name: Build
         run: gradle assembleDebug --no-daemon
